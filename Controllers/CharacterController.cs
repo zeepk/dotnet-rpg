@@ -2,6 +2,8 @@ using rpg.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using rpg.Services.CharacterService;
+using System.Threading.Tasks;
 
 namespace rpg.Controllers
 {
@@ -15,16 +17,18 @@ namespace rpg.Controllers
     // to make a class into a controller, have Controller derive from ControllerBase
     // can also derive from Controller if you need views, but this is just an API
     {
-        private static List<Character> characters = new List<Character>{
-            new Character(),
-            new Character {Id = 1, Name = "Kennet"},
-        };
+
+        //introducing the service
+        private readonly ICharacterService _characterService;
+        public CharacterController(ICharacterService characterService){
+            _characterService = characterService;
+        }
 
         // return list of characters
         [HttpGet("GetAll")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(characters);
+            return Ok(await _characterService.GetAllCharacters());
         }
         // other options would be return BadRequest or 404 here
 
@@ -34,17 +38,16 @@ namespace rpg.Controllers
         //     return Ok(characters[0]);
         // }
         [HttpGet("{id}")]
-        public IActionResult GetSingle(int id)
+        public async Task<IActionResult> GetSingle(int id)
         {
-            return Ok(characters.FirstOrDefault(c => c.Id == id));
+            return Ok(await _characterService.GetCharacterById(id));
         }
 
         // add new character via POST request, info sent via body
         [HttpPost]
-        public IActionResult AddCharacter(Character newCharacter)
+        public async Task<IActionResult> AddCharacter(Character newCharacter)
         {
-            characters.Add(newCharacter);
-            return Ok(characters);
+            return Ok(await _characterService.AddCharacter(newCharacter));
         }
 
     }
