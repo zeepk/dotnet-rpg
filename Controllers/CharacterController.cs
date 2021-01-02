@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using rpg.Services.CharacterService;
+using dotnet_rpg.Dtos.Character;
 using System.Threading.Tasks;
 
 namespace rpg.Controllers
@@ -45,7 +46,7 @@ namespace rpg.Controllers
 
         // add new character via POST request, info sent via body
         [HttpPost]
-        public async Task<IActionResult> AddCharacter(Character newCharacter)
+        public async Task<IActionResult> AddCharacter(AddCharacterDto newCharacter)
         {
             return Ok(await _characterService.AddCharacter(newCharacter));
         }
